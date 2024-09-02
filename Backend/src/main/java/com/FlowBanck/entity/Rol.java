@@ -22,4 +22,6 @@ public class Rol {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, unique = true)
     private EnumRol rol;
+
+
 }
