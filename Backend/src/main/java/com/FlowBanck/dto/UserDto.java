@@ -32,9 +32,6 @@ public class UserDto {
     private String email;
 
     @NotBlank
-    private String password;
-
-    @NotBlank
     private String state;
 
     private Set<EnumRol> rol;
@@ -45,6 +42,7 @@ public class UserDto {
                 .surname(userEntity.getSurname())
                 .email(userEntity.getEmail())
                 .rol(userEntity.getRoles().stream().map(Rol::getRol).collect(Collectors.toSet()))
+                .state(userEntity.getState())
                 .build();
     }
 

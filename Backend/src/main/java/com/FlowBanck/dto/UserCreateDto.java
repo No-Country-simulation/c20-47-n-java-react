@@ -35,13 +35,12 @@ public class UserCreateDto {
     @NotEmpty(message = "Debe ingresar un rol")
     private Set<EnumRol> rol;
 
-    public static UserCreateDto from(UserEntity userEntity){
+    public static UserDto from(UserEntity userEntity){
 
-        return UserCreateDto.builder()
+        return UserDto.builder()
                 .name(userEntity.getName())
                 .surname(userEntity.getSurname())
                 .email(userEntity.getEmail())
-                .password(userEntity.getPassword())
                 .rol(userEntity.getRoles().stream().map(Rol::getRol).collect(Collectors.toSet()))
                 .build();
     }

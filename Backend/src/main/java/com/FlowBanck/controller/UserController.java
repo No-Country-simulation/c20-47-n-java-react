@@ -1,6 +1,7 @@
 package com.FlowBanck.controller;
 
 import com.FlowBanck.dto.UserCreateDto;
+import com.FlowBanck.dto.UserDto;
 import com.FlowBanck.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/createUser")
-    public ResponseEntity<UserCreateDto> createUser(@Valid @RequestBody UserCreateDto userCreateDto) throws Exception {
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserCreateDto userCreateDto) throws Exception {
         return ResponseEntity.ok(this.userService.getSave(userCreateDto));
     }
 }

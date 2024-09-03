@@ -1,6 +1,7 @@
 package com.FlowBanck.service;
 
 import com.FlowBanck.dto.UserCreateDto;
+import com.FlowBanck.dto.UserDto;
 import com.FlowBanck.entity.EnumRol;
 import com.FlowBanck.entity.Rol;
 import com.FlowBanck.entity.UserEntity;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 
@@ -25,8 +27,9 @@ public class UserService {
    private final PasswordEncoder passwordEncoder;
    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    public UserCreateDto getSave(UserCreateDto userCreateDto) throws Exception {
+    public UserDto getSave(UserCreateDto userCreateDto) throws Exception {
 
+        String state="";
         Set<Rol> roles = new HashSet<>();
         for (EnumRol enumRol: userCreateDto.getRol()){
             Optional<Rol> existingRol = this.rolRepository.findByRol(enumRol);
@@ -45,11 +48,12 @@ public class UserService {
                 .surname(userCreateDto.getSurname())
                 .email(userCreateDto.getEmail())
                 .password(this.passwordEncoder.encode(userCreateDto.getPassword()))
+                .state(state="activo".toUpperCase(Locale.ROOT))
                 .roles(roles)
                 .build();
         try {
             this.userRepository.save(userEntity);
-            return UserCreateDto.from(userEntity);
+            return UserDto.fromUserDto(userEntity);
         }catch (Exception e){
             logger.error("Error saving userEntity: {}", e.getMessage(), e);
             throw e;
