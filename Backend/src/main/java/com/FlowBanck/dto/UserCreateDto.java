@@ -5,6 +5,7 @@ import com.FlowBanck.entity.Rol;
 import com.FlowBanck.entity.UserEntity;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,20 +20,21 @@ import java.util.stream.Collectors;
 @Builder
 public class UserCreateDto {
 
-    @NotEmpty(message = "Debe ingresar un nombre")
+    @NotEmpty(message = "Por favor, introduzca su Nombre")
     private String name;
 
-    @NotEmpty(message = "Debe ingresar un Apellido")
+    @NotEmpty(message = "Por favor, introduzca su Apellido")
     private String surname;
 
-    @NotEmpty(message = "Debe ingresar un email")
-    @Email(message = "El email que ah ongresado es incorrecto")
+    @NotEmpty(message = "Por favor, introduzca una dirección de correo electrónico válida")
+    @Email
     private String email;
 
-    @NotEmpty(message = "Debe ingresar una contraseña")
+    @NotEmpty(message = "Por favor, introduzca una contraseña")
+    @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
     private String password;
 
-    @NotEmpty(message = "Debe ingresar un rol")
+    @NotEmpty(message = "Por favor, seleccione su Rol")
     private Set<EnumRol> rol;
 
     public static UserDto from(UserEntity userEntity){

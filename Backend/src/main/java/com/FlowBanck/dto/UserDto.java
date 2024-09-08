@@ -34,6 +34,7 @@ public class UserDto {
     @NotBlank
     private String state;
 
+    @NotBlank
     private Set<EnumRol> rol;
 
     public static UserDto fromUserDto(UserEntity userEntity) {
@@ -54,6 +55,7 @@ public class UserDto {
                     .surname(listUserEntity.getSurname())
                     .email(listUserEntity.getEmail())
                     .rol(listUserEntity.getRoles().stream().map(Rol::getRol).collect(Collectors.toSet()))
+                    .state(listUserEntity.getState())
                     .build();
             userDtoList.add(userDto);
         }
