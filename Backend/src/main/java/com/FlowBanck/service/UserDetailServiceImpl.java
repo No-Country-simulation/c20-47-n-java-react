@@ -1,5 +1,6 @@
 package com.FlowBanck.service;
 
+import com.FlowBanck.entity.EnumState;
 import com.FlowBanck.entity.UserEntity;
 import com.FlowBanck.exception.login.AccountLockedException;
 import com.FlowBanck.exception.login.InvalidCredentialsException;
@@ -28,13 +29,13 @@ public class UserDetailServiceImpl implements UserDetailsService {
                 .orElseThrow(() ->new InvalidCredentialsException("El correo electrónico y la contraseña no coinciden. Por favor, verifica tus datos e intenta nuevamente."));
 
 
-        if (userEntity.getState().equalsIgnoreCase("INACTIVO")){
+        if (userEntity.getState().equals(EnumState.ACTIVA)){
             throw new AccountLockedException("Su cuenta se encuentra deshabilitada");
         }
-        else if (userEntity.getState().equalsIgnoreCase("BLOQUEADA")) {
+        else if (userEntity.getState().equals(EnumState.BLOQUEDA)) {
             throw new AccountLockedException("Su cuenta se encuentra bloqueada");
         }
-        else if(userEntity.getState().equalsIgnoreCase("BLOQUEADA_POR_INTENTOS")){
+        else if(userEntity.getState().equals(EnumState.SUSPENDIDA)){
             throw new TooManyFailedLoginAttemptsException("Su cuenta se encuentra bloqueada por repetitivos intentos fallido");
         }
 

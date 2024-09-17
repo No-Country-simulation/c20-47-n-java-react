@@ -29,11 +29,13 @@ public class UserEntity {
 
     private String password;
 
-    private String state;
-
     @ManyToMany(fetch = FetchType.EAGER, targetEntity = Rol.class, cascade = CascadeType.PERSIST)
     @JoinTable(name ="users_roles", joinColumns = @JoinColumn(name="user_id"), inverseJoinColumns = @JoinColumn(name = "rol_id"))
     private Set<Rol> roles;
+
+    @ManyToMany(fetch = FetchType.EAGER, targetEntity = State.class, cascade = CascadeType.PERSIST)
+    @JoinTable(name ="users_state", joinColumns = @JoinColumn(name="user_id"), inverseJoinColumns = @JoinColumn(name = "state_id"))
+    private Set<State> state;
 
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BankAccount> bankAccounts;

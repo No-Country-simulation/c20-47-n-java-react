@@ -4,6 +4,7 @@ import com.FlowBanck.entity.EnumRol;
 import com.FlowBanck.entity.Rol;
 import com.FlowBanck.entity.UserEntity;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -36,6 +37,10 @@ public class UserCreateDto {
 
     @NotEmpty(message = "Por favor, seleccione su Rol")
     private Set<EnumRol> rol;
+
+    @NotBlank(message = "Por favor, seleccione una tipo de cuenta bancaria")
+    private String accountType;
+
 
     public static UserDto from(UserEntity userEntity){
 

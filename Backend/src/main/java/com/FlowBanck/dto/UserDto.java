@@ -1,8 +1,6 @@
 package com.FlowBanck.dto;
 
-import com.FlowBanck.entity.EnumRol;
-import com.FlowBanck.entity.Rol;
-import com.FlowBanck.entity.UserEntity;
+import com.FlowBanck.entity.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -32,7 +30,7 @@ public class UserDto {
     private String email;
 
     @NotBlank
-    private String state;
+    private Set<EnumState> state;
 
     @NotBlank
     private Set<EnumRol> rol;
@@ -43,7 +41,7 @@ public class UserDto {
                 .surname(userEntity.getSurname())
                 .email(userEntity.getEmail())
                 .rol(userEntity.getRoles().stream().map(Rol::getRol).collect(Collectors.toSet()))
-                .state(userEntity.getState())
+                .state(userEntity.getState().stream().map(State::getState).collect(Collectors.toSet()))
                 .build();
     }
 
@@ -55,7 +53,7 @@ public class UserDto {
                     .surname(listUserEntity.getSurname())
                     .email(listUserEntity.getEmail())
                     .rol(listUserEntity.getRoles().stream().map(Rol::getRol).collect(Collectors.toSet()))
-                    .state(listUserEntity.getState())
+                    .state(listUserEntity.getState().stream().map(State::getState).collect(Collectors.toSet()))
                     .build();
             userDtoList.add(userDto);
         }

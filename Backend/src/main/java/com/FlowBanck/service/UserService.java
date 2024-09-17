@@ -2,11 +2,10 @@ package com.FlowBanck.service;
 
 import com.FlowBanck.dto.UserCreateDto;
 import com.FlowBanck.dto.UserDto;
-import com.FlowBanck.entity.EnumRol;
-import com.FlowBanck.entity.Rol;
-import com.FlowBanck.entity.UserEntity;
+import com.FlowBanck.entity.*;
 import com.FlowBanck.exception.ResourceNotFoundException;
 import com.FlowBanck.repository.RolRepository;
+import com.FlowBanck.repository.StateRepository;
 import com.FlowBanck.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -24,12 +23,17 @@ public class UserService {
    private final UserRepository userRepository;
    private  final RolRepository rolRepository;
    private final PasswordEncoder passwordEncoder;
-   private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+   private final BankAccountService bankAccountService;
+   private final StateRepository stateRepository;
 
    //GUARDAR USUARIO
     public UserDto getSave(UserCreateDto userCreateDto) throws Exception {
 
         Set<Rol> roles = new HashSet<>();
+        Set<State> states = new HashSet<>();
+
+       // states.add(new State(EnumState.ACTIVA));
+
         for (EnumRol enumRol: userCreateDto.getRol()){
             Optional<Rol> existingRol = this.rolRepository.findByRol(enumRol);
             if (existingRol.isPresent()){
@@ -42,16 +46,32 @@ public class UserService {
                 roles.add(newRol);
             }
         }
+
+        Optional<State> stateOptional = this.stateRepository.findByState(EnumState.ACTIVA);
+
+        if(stateOptional.isPresent()){
+            states.add(stateOptional.get());
+        }else {
+            State newState = State.builder()
+                    .state(EnumState.ACTIVA)
+                    .build();
+            this.stateRepository.save(newState);
+            states.add(newState);
+        }
+
         UserEntity userEntity = UserEntity.builder()
                 .name(userCreateDto.getName())
                 .surname(userCreateDto.getSurname())
                 .email(userCreateDto.getEmail())
                 .password(this.passwordEncoder.encode(userCreateDto.getPassword()))
-                .state("activo".toUpperCase(Locale.ROOT))
+                .state(states)
                 .roles(roles)
                 .build();
 
-        return UserDto.fromUserDto(this.userRepository.save(userEntity));
+        UserEntity user = this.userRepository.save(userEntity);
+        this.bankAccountService.saveBankAccount(user,userCreateDto.getAccountType());
+
+        return UserDto.fromUserDto(user);
 
     }
 
@@ -97,7 +117,9 @@ public class UserService {
             throw new ResourceNotFoundException("Cliente","ID",id);
         }
         UserEntity userEntity = optionalUser.get();
-        userEntity.setState("inactivo".toUpperCase(Locale.ROOT));
+        Set<State> states = new HashSet<>();
+        states.add(new State(EnumState.INACTIVA));
+        userEntity.setState(states);
         this.userRepository.save(userEntity);
         return "El usuario se elimino correctamente";
     }
