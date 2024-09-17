@@ -4,6 +4,7 @@ import com.FlowBanck.dto.UserCreateDto;
 import com.FlowBanck.dto.UserDto;
 import com.FlowBanck.entity.*;
 import com.FlowBanck.exception.ResourceNotFoundException;
+import com.FlowBanck.repository.BankAccountRepository;
 import com.FlowBanck.repository.RolRepository;
 import com.FlowBanck.repository.StateRepository;
 import com.FlowBanck.repository.UserRepository;
@@ -25,6 +26,7 @@ public class UserService {
    private final PasswordEncoder passwordEncoder;
    private final BankAccountService bankAccountService;
    private final StateRepository stateRepository;
+   private final BankAccountRepository accountRepository;
 
    //GUARDAR USUARIO
     public UserDto getSave(UserCreateDto userCreateDto) throws Exception {
@@ -150,6 +152,11 @@ public class UserService {
         }
         return UserDto.ListUserDto(userEntityList);
 
+    }
+
+    public BankAccount getBankAccountByUser(String email){
+        UserEntity user = this.userRepository.getEmail(email).orElseThrow(()-> new IllegalArgumentException("Usuario no encontrado"));
+        return this.accountRepository.findByUserEntity(user);
     }
 
 }
